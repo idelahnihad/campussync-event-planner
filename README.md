@@ -1,6 +1,9 @@
 # CampusSync — Campus Event Planner
 
 COMP229 Web Application Development · Group 7 · Project Part 1
+## Project repository
+
+https://github.com/idelahnihad/campussync-event-planner
 
 CampusSync is a small full-stack event planner. Registered users can view campus events and create, edit, or delete their own events. The backend uses Node.js, Express, MongoDB, Mongoose, and an MVC-style folder structure. The frontend uses React, TypeScript, and Vite.
 
