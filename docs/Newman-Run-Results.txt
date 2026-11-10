@@ -1,0 +1,119 @@
+newman
+
+CampusSync API Tests
+
+□ 1 Health
+└ 01 Health Check
+  GET http://127.0.0.1:5000/api/health [200 OK, 1.08kB, 26ms]
+  √  Status is 200
+  √  Database is connected
+
+□ 2 Authentication
+└ 02 Register Owner
+  POST http://127.0.0.1:5000/api/auth/register [201 Created, 1.59kB, 490ms]
+  √  Status is 201
+  √  Token and user are returned
+
+└ 03 Register Duplicate Email
+  POST http://127.0.0.1:5000/api/auth/register [409 Conflict, 1.17kB, 5ms]
+  √  Status is 409
+
+└ 04 Login Owner
+  POST http://127.0.0.1:5000/api/auth/login [200 OK, 1.58kB, 479ms]
+  √  Status is 200
+  √  Token and user are returned
+
+└ 05 Login Wrong Password
+  POST http://127.0.0.1:5000/api/auth/login [401 Unauthorized, 1.16kB, 471ms]
+  √  Status is 401
+
+└ 06 Register Other User
+  POST http://127.0.0.1:5000/api/auth/register [201 Created, 1.59kB, 488ms]
+  √  Status is 201
+
+└ 07 Login Other User
+  POST http://127.0.0.1:5000/api/auth/login [200 OK, 1.58kB, 485ms]
+  √  Status is 200
+
+□ 3 User CRUD
+└ 08 Get My Profile
+  GET http://127.0.0.1:5000/api/users/me [200 OK, 1.2kB, 4ms]
+  √  Status is 200
+  √  Password hash is never exposed
+
+└ 09 Update My Profile
+  PUT http://127.0.0.1:5000/api/users/me [200 OK, 1.23kB, 14ms]
+  √  Status is 200
+  √  Name is updated
+
+└ 10 Register Temporary User
+  POST http://127.0.0.1:5000/api/auth/register [201 Created, 1.6kB, 469ms]
+  √  Status is 201
+
+└ 11 Delete Temporary Account
+  DELETE http://127.0.0.1:5000/api/users/me [200 OK, 1.05kB, 10ms]
+  √  Status is 200
+
+□ 4 Event CRUD and Authorization
+└ 12 Get Events Without Token
+  GET http://127.0.0.1:5000/api/events [401 Unauthorized, 1.06kB, 2ms]
+  √  Status is 401
+
+└ 13 Create Event
+  POST http://127.0.0.1:5000/api/events [201 Created, 1.5kB, 9ms]
+  √  Status is 201
+  √  Event has organizer and ID
+
+└ 14 Create Invalid Event
+  POST http://127.0.0.1:5000/api/events [400 Bad Request, 1.16kB, 6ms]
+  √  Status is 400
+
+└ 15 Get All Events
+  GET http://127.0.0.1:5000/api/events [200 OK, 2.37kB, 9ms]
+  √  Status is 200
+  √  Created event is listed
+
+└ 16 Get One Event
+  GET http://127.0.0.1:5000/api/events/6af37c0d37fd6d7c5843ba68 [200 OK, 1.46kB, 8ms]
+  √  Status is 200
+
+└ 17 Update As Other User - Forbidden
+  PUT http://127.0.0.1:5000/api/events/6af37c0d37fd6d7c5843ba68 [403 Forbidden, 1.06kB, 8ms]
+  √  Status is 403
+
+└ 18 Update As Owner
+  PUT http://127.0.0.1:5000/api/events/6af37c0d37fd6d7c5843ba68 [200 OK, 1.5kB, 9ms]
+  √  Status is 200
+  √  Changes are saved
+
+└ 19 Delete As Other User - Forbidden
+  DELETE http://127.0.0.1:5000/api/events/6af37c0d37fd6d7c5843ba68 [403 Forbidden, 1.07kB, 4ms]
+  √  Status is 403
+
+└ 20 Delete As Owner
+  DELETE http://127.0.0.1:5000/api/events/6af37c0d37fd6d7c5843ba68 [200 OK, 1.08kB, 10ms]
+  √  Status is 200
+
+└ 21 Get Deleted Event
+  GET http://127.0.0.1:5000/api/events/6af37c0d37fd6d7c5843ba68 [404 Not Found, 1.04kB, 5ms]
+  √  Status is 404
+
+┌─────────────────────────┬────────────────────┬───────────────────┐
+│                         │           executed │            failed │
+├─────────────────────────┼────────────────────┼───────────────────┤
+│              iterations │                  1 │                 0 │
+├─────────────────────────┼────────────────────┼───────────────────┤
+│                requests │                 21 │                 0 │
+├─────────────────────────┼────────────────────┼───────────────────┤
+│            test-scripts │                 21 │                 0 │
+├─────────────────────────┼────────────────────┼───────────────────┤
+│      prerequest-scripts │                  0 │                 0 │
+├─────────────────────────┼────────────────────┼───────────────────┤
+│              assertions │                 29 │                 0 │
+├─────────────────────────┴────────────────────┴───────────────────┤
+│ total run duration: 4.5s                                         │
+├──────────────────────────────────────────────────────────────────┤
+│ total data received: 6.25kB (approx)                             │
+├──────────────────────────────────────────────────────────────────┤
+│ average response time: 143ms [min: 2ms, max: 490ms, s.d.: 213ms] │
+└──────────────────────────────────────────────────────────────────┘

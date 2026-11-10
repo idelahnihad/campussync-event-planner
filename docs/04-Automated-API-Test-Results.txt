@@ -1,0 +1,21 @@
+
+> campussync-event-planner@0.0.0 test
+> node --test --test-concurrency=1 server/tests/*.test.js
+
+✔ authentication and user CRUD (1632.3088ms)
+✔ event CRUD, token protection, and ownership authorization (47.0701ms)
+✔ profile password changes require the current password and replace login credentials (1837.6687ms)
+✔ account deletion removes owned events, preserves other events, and rejects the deleted user's token (545.7964ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4892.8257
+npm notice
+npm notice New major version of npm available! 11.20.0 -> 12.2.2
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.2
+npm notice To update run: npm install -g npm@12.2.2
+npm notice
