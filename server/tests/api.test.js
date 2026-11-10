@@ -5,6 +5,7 @@ import { MongoMemoryServer } from "mongodb-memory-server";
 import mongoose from "mongoose";
 import { app } from "../app.js";
 import { Event } from "../models/Event.js";
+import { User } from "../models/User.js";
 
 let mongo;
 let ownerToken;
@@ -149,4 +150,82 @@ test("event CRUD, token protection, and ownership authorization", async () => {
     .get(`/api/events/${eventId}`)
     .set("Authorization", `Bearer ${ownerToken}`);
   assert.equal(readDeleted.status, 404);
+});
+
+test("profile password changes require the current password and replace login credentials", async () => {
+  const email = "password-change@test.local";
+  const oldPassword = "OriginalPass123!";
+  const newPassword = "ReplacementPass456!";
+  const registration = await request(app).post("/api/auth/register").send({
+    fullName: "Password Test Student", email, password: oldPassword,
+  });
+  assert.equal(registration.status, 201);
+  const authorization = `Bearer ${registration.body.token}`;
+
+  const missingCurrent = await request(app).put("/api/users/me")
+    .set("Authorization", authorization).send({ newPassword });
+  assert.equal(missingCurrent.status, 400);
+
+  const wrongCurrent = await request(app).put("/api/users/me")
+    .set("Authorization", authorization)
+    .send({ currentPassword: "IncorrectPass123!", newPassword });
+  assert.equal(wrongCurrent.status, 401);
+
+  const tooShort = await request(app).put("/api/users/me")
+    .set("Authorization", authorization)
+    .send({ currentPassword: oldPassword, newPassword: "short" });
+  assert.equal(tooShort.status, 400);
+
+  const unchangedLogin = await request(app).post("/api/auth/login")
+    .send({ email, password: oldPassword });
+  assert.equal(unchangedLogin.status, 200);
+
+  const changed = await request(app).put("/api/users/me")
+    .set("Authorization", authorization)
+    .send({ currentPassword: oldPassword, newPassword });
+  assert.equal(changed.status, 200);
+  assert.equal(changed.body.user.passwordHash, undefined);
+  assert.equal(changed.body.user.password, undefined);
+
+  const oldLogin = await request(app).post("/api/auth/login")
+    .send({ email, password: oldPassword });
+  assert.equal(oldLogin.status, 401);
+  const newLogin = await request(app).post("/api/auth/login")
+    .send({ email, password: newPassword });
+  assert.equal(newLogin.status, 200);
+  assert.equal(newLogin.body.user.passwordHash, undefined);
+});
+
+test("account deletion removes owned events, preserves other events, and rejects the deleted user's token", async () => {
+  const register = (email) => request(app).post("/api/auth/register").send({
+    fullName: "Deletion Test Student", email, password: "DeletionPass123!",
+  });
+  const owner = await register("delete-owner@test.local");
+  const survivor = await register("surviving-owner@test.local");
+  assert.equal(owner.status, 201);
+  assert.equal(survivor.status, 201);
+  const payload = {
+    title: "Account Deletion Workshop", description: "Verify owner-specific event cleanup.",
+    category: "Workshop", date: "2026-12-10", startTime: "13:30", location: "Room B204",
+  };
+  const createEvent = (token) => request(app).post("/api/events")
+    .set("Authorization", `Bearer ${token}`).send(payload);
+  const owned = await createEvent(owner.body.token);
+  const preserved = await createEvent(survivor.body.token);
+  assert.equal(owned.status, 201);
+  assert.equal(preserved.status, 201);
+
+  const deletion = await request(app).delete("/api/users/me")
+    .set("Authorization", `Bearer ${owner.body.token}`);
+  assert.equal(deletion.status, 200);
+  assert.equal(await User.findById(owner.body.user._id), null);
+  assert.equal(await Event.findById(owned.body.event._id), null);
+  assert.ok(await Event.findById(preserved.body.event._id));
+
+  const staleToken = await request(app).get("/api/users/me")
+    .set("Authorization", `Bearer ${owner.body.token}`);
+  assert.equal(staleToken.status, 401);
+  const survivingEvent = await request(app).get(`/api/events/${preserved.body.event._id}`)
+    .set("Authorization", `Bearer ${survivor.body.token}`);
+  assert.equal(survivingEvent.status, 200);
 });
