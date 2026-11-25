@@ -70,7 +70,7 @@ export default function Profile() {
             <label htmlFor="profile-email">Email</label>
             <input id="profile-email" type="email" value={email} onChange={(event) => setEmail(event.target.value)} required />
           </div>
-          <button type="submit" className="button" disabled={busy}>{busy ? "Saving…" : "Update profile"}</button>
+          <button type="submit" className="button" disabled={busy}>{busy ? "Saving..." : "Update profile"}</button>
         </form>
         <aside className="account-summary">
           <h2>Account access</h2>

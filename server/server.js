@@ -3,6 +3,10 @@ import mongoose from "mongoose";
 import { app } from "./app.js";
 import { connectDatabase } from "./config/db.js";
 
+if (!process.env.JWT_SECRET && process.env.NODE_ENV === "production") {
+  throw new Error("JWT_SECRET must be set in the deployment environment.");
+}
+
 if (!process.env.JWT_SECRET) {
   process.env.JWT_SECRET = "campussync-local-development-only-2026";
   console.warn("JWT_SECRET is not set. Using the local development key; set a private key for deployment.");

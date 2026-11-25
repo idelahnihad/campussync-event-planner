@@ -3,13 +3,13 @@
 @tailwind utilities;
 
 :root {
-  --cream-50: oklch(0.986 0.022 96);
-  --cream-25: oklch(0.996 0.009 96);
-  --charcoal-900: oklch(0.31 0.012 75);
-  --charcoal-700: oklch(0.43 0.012 75);
-  --charcoal-500: oklch(0.54 0.012 75);
-  --green-700: oklch(0.49 0.105 163);
-  --green-600: oklch(0.58 0.13 163);
+  --cream-50: oklch(0.965 0.025 45);
+  --cream-25: oklch(0.992 0.008 45);
+  --charcoal-900: oklch(0.36 0.045 185);
+  --charcoal-700: oklch(0.43 0.038 185);
+  --charcoal-500: oklch(0.53 0.03 185);
+  --green-700: oklch(0.39 0.065 185);
+  --green-600: oklch(0.46 0.08 185);
   --yellow-100: oklch(0.97 0.06 103);
   --blue-100: oklch(0.93 0.035 235);
   --pink-100: oklch(0.94 0.035 15);
@@ -28,7 +28,7 @@
   --radius: 4px;
   color: var(--text);
   background: var(--canvas);
-  font-family: "Roboto", sans-serif;
+  font-family: "DM Sans", sans-serif;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
 }
@@ -106,9 +106,13 @@ h3 {
 }
 
 h1 {
+  font-family: "Plus Jakarta Sans", "DM Sans", sans-serif;
+  font-weight: 700;
+}
+
+h1 {
   font-size: clamp(2.3rem, 5vw, 4.7rem);
-  font-weight: 300;
-  letter-spacing: -0.035em;
+  letter-spacing: -0.045em;
 }
 
 h2 {
@@ -434,6 +438,123 @@ main {
   text-align: right;
   font-size: 0.82rem;
   font-weight: 500;
+}
+
+.signed-in-user {
+  max-width: 140px;
+  overflow: hidden;
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.release-display {
+  padding-block: 28px;
+  font-family: "Plus Jakarta Sans", "DM Sans", sans-serif;
+  font-size: clamp(3.4rem, 7vw, 5.8rem);
+  font-weight: 700;
+  letter-spacing: -0.065em;
+  line-height: 0.94;
+}
+
+.hero-calendar-release {
+  background: var(--yellow-100);
+}
+
+.calendar-note[href] {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.public-events {
+  padding-block: 28px 64px;
+  scroll-margin-top: 24px;
+}
+
+.public-events-heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 32px;
+  margin-bottom: 32px;
+}
+
+.public-events-heading .section-label {
+  margin-bottom: 12px;
+}
+
+.public-events-heading h2 {
+  margin: 0;
+  font-family: "Plus Jakarta Sans", "DM Sans", sans-serif;
+  font-size: clamp(2rem, 4vw, 3.4rem);
+  letter-spacing: -0.04em;
+}
+
+.public-events-heading > p {
+  max-width: 340px;
+  margin: 0;
+  color: var(--text-muted);
+}
+
+.public-event-list {
+  border-top: 1px solid var(--text);
+}
+
+.public-event {
+  display: grid;
+  grid-template-columns: minmax(170px, 0.42fr) minmax(0, 1.1fr) minmax(200px, 0.48fr);
+  gap: clamp(24px, 4vw, 56px);
+  padding: clamp(26px, 4vw, 44px);
+  border-bottom: 1px solid var(--text);
+}
+
+.public-tone-0 { background: var(--paper); }
+.public-tone-1 { background: var(--pink-100); }
+.public-tone-2 { background: var(--blue-100); }
+.public-tone-3 { background: var(--yellow-100); }
+
+.public-event-date,
+.public-event-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.public-event-date strong {
+  font-size: 1.15rem;
+  line-height: 1.35;
+}
+
+.public-event-copy h3 {
+  margin: 10px 0 14px;
+  font-size: clamp(1.5rem, 2.5vw, 2.2rem);
+  letter-spacing: -0.025em;
+}
+
+.public-event-copy p {
+  margin: 0;
+  color: var(--text-muted);
+}
+
+.public-event-meta {
+  justify-content: center;
+}
+
+.public-event-meta > span {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.public-event-meta .text-link {
+  margin-top: 8px;
 }
 
 .home-strip {
@@ -1002,6 +1123,16 @@ textarea:focus {
     grid-template-columns: 1fr 1fr;
   }
 
+  .public-event {
+    grid-template-columns: minmax(150px, 0.4fr) minmax(0, 1fr);
+  }
+
+  .public-event-meta {
+    grid-column: 1 / -1;
+    padding-top: 20px;
+    border-top: 1px solid var(--text);
+  }
+
   .event-row {
     grid-template-columns: minmax(0, 1.15fr) minmax(210px, 0.85fr);
     gap: 30px;
@@ -1104,6 +1235,33 @@ textarea:focus {
 
   .dashboard-heading .button {
     width: 100%;
+  }
+
+  .signed-in-user {
+    width: 100%;
+    max-width: none;
+    padding-block: 4px;
+  }
+
+  .public-events-heading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .public-event {
+    grid-template-columns: 1fr;
+    gap: 24px;
+    padding: 28px 20px;
+  }
+
+  .public-event-date {
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--text);
+  }
+
+  .public-event-meta {
+    grid-column: auto;
   }
 
   .event-tools,

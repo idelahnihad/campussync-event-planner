@@ -1,5 +1,6 @@
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import compression from "compression";
 import cors from "cors";
 import express from "express";
 import rateLimit from "express-rate-limit";
@@ -14,6 +15,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 export const app = express();
 
 app.disable("x-powered-by");
+app.use(compression());
 app.use(helmet());
 app.use(express.json({ limit: "100kb" }));
 app.use(express.urlencoded({ extended: false, limit: "100kb" }));
@@ -48,7 +50,15 @@ app.use("/api/events", eventRoutes);
 app.use(notFound);
 
 const frontendPath = path.resolve(__dirname, "../dist/public");
-app.use(express.static(frontendPath));
+app.use(express.static(frontendPath, {
+  setHeaders(res, filePath) {
+    if (filePath.endsWith("index.html") || filePath.endsWith("sw.js")) {
+      res.setHeader("Cache-Control", "no-cache");
+    } else {
+      res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
+    }
+  },
+}));
 app.use((req, res, next) => {
   if (req.method === "GET" && req.accepts("html")) {
     return res.sendFile(path.join(frontendPath, "index.html"), (error) => {

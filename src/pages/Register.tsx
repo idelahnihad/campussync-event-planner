@@ -59,7 +59,7 @@ export default function Register() {
           <label htmlFor="register-confirm">Confirm password</label>
           <input id="register-confirm" type="password" autoComplete="new-password" value={confirmPassword} onChange={(event) => setConfirmPassword(event.target.value)} minLength={8} required />
         </div>
-        <button className="button button-full" type="submit" disabled={busy}>{busy ? "Creating account…" : "Create account"}</button>
+        <button className="button button-full" type="submit" disabled={busy}>{busy ? "Creating account..." : "Create account"}</button>
         <p className="form-switch">Already registered? <Link to="/login">Log in</Link></p>
       </form>
     </section>

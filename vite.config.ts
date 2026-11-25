@@ -36,6 +36,14 @@ export default defineConfig({
   ],
   build: {
     outDir: 'dist/public',
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          react: ['react', 'react-dom', 'react-router'],
+          icons: ['lucide-react'],
+        },
+      },
+    },
   },
   server: {
     port: 3000,
