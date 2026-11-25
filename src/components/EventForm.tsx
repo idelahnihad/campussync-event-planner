@@ -103,7 +103,7 @@ export default function EventForm({ initialValues, submitLabel, busy, onSubmit, 
       </div>
       <div className="form-actions form-field-wide">
         <button type="button" className="button button-secondary" onClick={onCancel} disabled={busy}>Cancel</button>
-        <button type="submit" className="button" disabled={busy}>{busy ? "Saving…" : submitLabel}</button>
+        <button type="submit" className="button" disabled={busy}>{busy ? "Saving..." : submitLabel}</button>
       </div>
     </form>
   );

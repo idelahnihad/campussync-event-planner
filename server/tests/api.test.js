@@ -6,7 +6,6 @@ import mongoose from "mongoose";
 import { app } from "../app.js";
 import { Event } from "../models/Event.js";
 import { User } from "../models/User.js";
-
 let mongo;
 let ownerToken;
 let otherToken;
@@ -84,9 +83,13 @@ test("authentication and user CRUD", async () => {
   assert.equal(deletion.status, 200);
 });
 
-test("event CRUD, token protection, and ownership authorization", async () => {
-  const noToken = await request(app).get("/api/events");
-  assert.equal(noToken.status, 401);
+test("event CRUD, public listing, token protection, and ownership authorization", async () => {
+  const publicList = await request(app).get("/api/events");
+  assert.equal(publicList.status, 200);
+  assert.equal(publicList.body.count, 0);
+
+  const noTokenCreate = await request(app).post("/api/events").send({});
+  assert.equal(noTokenCreate.status, 401);
 
   const payload = {
     title: "API Testing Workshop",

@@ -10,11 +10,10 @@ import {
 
 export const eventRoutes = Router();
 
-eventRoutes.use(requireAuth);
 eventRoutes.route("/")
   .get(listEvents)
-  .post(createEvent);
+  .post(requireAuth, createEvent);
 eventRoutes.route("/:id")
   .get(getEvent)
-  .put(updateEvent)
-  .delete(deleteEvent);
+  .put(requireAuth, updateEvent)
+  .delete(requireAuth, deleteEvent);

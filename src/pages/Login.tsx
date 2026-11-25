@@ -43,7 +43,7 @@ export default function Login() {
           <label htmlFor="login-password">Password</label>
           <input id="login-password" type="password" autoComplete="current-password" value={password} onChange={(event) => setPassword(event.target.value)} required />
         </div>
-        <button className="button button-full" type="submit" disabled={busy}>{busy ? "Logging in…" : "Log in"}</button>
+        <button className="button button-full" type="submit" disabled={busy}>{busy ? "Logging in..." : "Log in"}</button>
         <p className="form-switch">New to CampusSync? <Link to="/register">Create an account</Link></p>
       </form>
     </section>

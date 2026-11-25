@@ -1,15 +1,14 @@
 import { CalendarPlus, LayoutList, LogOut, UserRound } from "lucide-react";
-import { NavLink, Outlet, useNavigate } from "react-router";
+import { NavLink, Outlet } from "react-router";
 import { useAuth } from "../context/AuthContext";
 import Brand from "./Brand";
 
 export default function Layout() {
   const { user, logout } = useAuth();
-  const navigate = useNavigate();
 
   function handleLogout() {
     logout();
-    navigate("/");
+    window.location.replace("/");
   }
 
   return (
@@ -27,10 +26,11 @@ export default function Layout() {
                   <CalendarPlus size={18} aria-hidden="true" /> Add event
                 </NavLink>
                 <NavLink to="/profile" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"}>
-                  <UserRound size={18} aria-hidden="true" /> Profile
+                  <UserRound size={18} aria-hidden="true" /> My Profile
                 </NavLink>
+                <span className="signed-in-user" title={`Signed in as ${user.email}`}>{user.fullName}</span>
                 <button type="button" className="nav-link nav-button" onClick={handleLogout}>
-                  <LogOut size={18} aria-hidden="true" /> Log out
+                  <LogOut size={18} aria-hidden="true" /> Sign Out
                 </button>
               </>
             ) : (
@@ -48,7 +48,7 @@ export default function Layout() {
       <footer className="site-footer">
         <div>
           <strong>CampusSync</strong>
-          <span>COMP229 · Group 7 · Project Part 1</span>
+          <span>COMP229 · Group 7 · Project Part 2</span>
         </div>
         <span>Plan clearly. Meet on campus.</span>
       </footer>
